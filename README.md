@@ -24,7 +24,7 @@ Git clone this repository.
 
 [Sign up](https://home.openweathermap.org/users/sign_up) on OpenWeather
 
-and place your free [API_KEY](https://home.openweathermap.org/api_keys) in the variable API_KEY in weather_app.py
+and place your free [API KEY](https://home.openweathermap.org/api_keys) in the variable API_KEY in weather_app.py
 
 ```pip install -r requirements.txt```
 
