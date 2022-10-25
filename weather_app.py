@@ -7,8 +7,7 @@ from matplotlib import pyplot as plt
 import plotly.graph_objects as go
 
 
-API_KEY = os.getenv('API_KEY')
-owm = pyowm.OWM(API_KEY)
+owm = pyowm.OWM("5f7a7fcc7ea53a6e994517db909a34a3")
 mgr = owm.weather_manager()
 
 degree_sign = u'\N{DEGREE SIGN}'
@@ -144,8 +143,8 @@ def updates():
     st.write('### The Cloud Coverage in', place, 'is', cloud_cov, '%')
     st.write('### The Wind Speed in', place, 'is', winds, 'meters/sec')
     st.title("Sunrise and Sunset Times :")
-    ss = datetime.fromtimestamp(weather.sunset_time()).strftime("%I:%M %p")
-    sr = datetime.fromtimestamp(weather.sunrise_time()).strftime("%I:%M %p")
+    ss = datetime.utcfromtimestamp(weather.sunset_time()).strftime("%I:%M %p")
+    sr = datetime.utcfromtimestamp(weather.sunrise_time()).strftime("%I:%M %p")
     st.write("### Sunrise time in", place, "is", sr)
     st.write("### Sunset time in", place, "is", ss)
     creators = '<p style="font-family:Source Sans Pro; color:#09ab3b; font-size:20px; text-align:right;">Made by</p><p style="font-family:Source Sans Pro; color:#09ab3b; font-size: 15px; text-align:right;">Awais, Sunil, Priyanka, and Pranay</p>'
