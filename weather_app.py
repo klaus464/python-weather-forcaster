@@ -143,8 +143,8 @@ def updates():
     st.write('### The Cloud Coverage in', place, 'is', cloud_cov, '%')
     st.write('### The Wind Speed in', place, 'is', winds, 'meters/sec')
     st.title("Sunrise and Sunset Times :")
-    ss = datetime.utcfromtimestamp(weather.sunset_time()).strftime("%I:%M %p")
-    sr = datetime.utcfromtimestamp(weather.sunrise_time()).strftime("%I:%M %p")
+    ss = str(datetime.fromtimestamp(weather.sunset_time()).strftime("%I:%M %p"))
+    sr = str(datetime.fromtimestamp(weather.sunrise_time()).strftime("%I:%M %p"))
     st.write("### Sunrise time in", place, "is", sr)
     st.write("### Sunset time in", place, "is", ss)
     creators = '<p style="font-family:Source Sans Pro; color:#09ab3b; font-size:20px; text-align:right;">Made by</p><p style="font-family:Source Sans Pro; color:#09ab3b; font-size: 15px; text-align:right;">Awais, Sunil, Priyanka, and Pranay</p>'
