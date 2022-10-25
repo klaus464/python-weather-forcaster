@@ -1,22 +1,19 @@
 import os
-import pytz
 import pyowm
 import streamlit as st
 from matplotlib import dates
 from datetime import datetime
 from matplotlib import pyplot as plt
 import plotly.graph_objects as go
-import plotly.express as px
 
 
-API_KEY = ""
+API_KEY = os.getenv('API_KEY')
 owm = pyowm.OWM(API_KEY)
 mgr = owm.weather_manager()
 
 degree_sign = u'\N{DEGREE SIGN}'
 
 st.title("5 Day Weather Forecast")
-st.write("##### Made by Awais, Sunil, Priyanka, & Pranay")
 st.write("### Write the name of a City and select the Temperature Unit and Graph Type")
 
 place = st.text_input("NAME OF THE CITY :", "")
@@ -65,23 +62,22 @@ def init_plot():
     plt.title('Weekly Forecast')
 
 
-def plot_temperatures(days, temp_min, temp_max):
+def plot_temperature_bars(days, temp_min, temp_max):
     # days = dates.date2num(days)
     fig = go.Figure(
         data=[
-            go.Bar(name='minimum temperatures', x=days, y=temp_min),
-            go.Bar(name='maximum temperatures', x=days, y=temp_max)
+            go.Bar(name='min', x=days, y=temp_min),
+            go.Bar(name='max', x=days, y=temp_max)
         ]
     )
     fig.update_layout(barmode='group')
     return fig
 
 
-def plot_temperatures_line(days, temp_min, temp_max):
+def plot_temperature_lines(days, temp_min, temp_max):
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=days, y=temp_min, name='minimum temperatures'))
-    fig.add_trace(go.Scatter(x=days, y=temp_max,
-                  name='maximimum temperatures'))
+    fig.add_trace(go.Scatter(x=days, y=temp_min, name='min'))
+    fig.add_trace(go.Scatter(x=days, y=temp_max, name='max'))
     return fig
 
 
@@ -94,26 +90,26 @@ def label_xaxis(days):
 
 def draw_bar_chart():
     days, temp_min, temp_max = get_temperature()
-    fig = plot_temperatures(days, temp_min, temp_max)
+    fig = plot_temperature_bars(days, temp_min, temp_max)
     # write_temperatures_on_bar_chart(bar_min, bar_max)
     st.plotly_chart(fig)
     st.title("Minimum and Maximum Temperatures")
-    for i in range(0, 5):
-        st.write("### ", temp_min[i], degree_sign,
-                 ' --- ', temp_max[i], degree_sign)
+    for i in range(0, 6):
+        st.write("### ", days[i].strftime("%d %b"), temp_min[i],
+                 degree_sign, ' --- ', temp_max[i], degree_sign)
 
 
 def draw_line_chart():
     days, temp_min, temp_max = get_temperature()
-    fig = plot_temperatures_line(days, temp_min, temp_max)
+    fig = plot_temperature_lines(days, temp_min, temp_max)
     st.plotly_chart(fig)
     st.title("Minimum and Maximum Temperatures")
-    for i in range(0, 5):
-        st.write("### ", temp_min[i], degree_sign,
-                 ' --- ', temp_max[i], degree_sign)
+    for i in range(0, 6):
+        st.write("### ", days[i].strftime("%d %b"), temp_min[i],
+                 degree_sign, ' --- ', temp_max[i], degree_sign,)
 
 
-def other_weather_updates():
+def impending_weather_changes():
     forecaster = mgr.forecast_at_place(place, '3h')
     st.title("Impending Weather Changes :")
     if forecaster.will_have_fog():
@@ -134,36 +130,31 @@ def other_weather_updates():
         st.write("### Clear Weather!")
 
 
-def cloud_and_wind():
+def updates():
     obs = mgr.weather_at_place(place)
     weather = obs.weather
+    st.title("Status")
+    st.write("### ", weather.detailed_status)
+    impending_weather_changes()
     cloud_cov = weather.clouds
     winds = weather.wind()['speed']
-    st.title("Cloud coverage and wind speed")
-    st.write('### The current cloud coverage for', place, 'is', cloud_cov, '%')
-    st.write('### The current wind speed for', place, 'is', winds, 'mph')
-
-
-def sunrise_and_sunset():
-    obs = mgr.weather_at_place(place)
-    weather = obs.weather
+    visibility = weather.visibility(unit='miles')
+    st.title("Other weather updates :")
+    st.write("### The Visibility in", place, "is", visibility, "miles")
+    st.write('### The Cloud Coverage in', place, 'is', cloud_cov, '%')
+    st.write('### The Wind Speed in', place, 'is', winds, 'meters/sec')
     st.title("Sunrise and Sunset Times :")
-    india = pytz.timezone("Asia/Kolkata")
-    ss = weather.sunset_time(timeformat='iso')
-    sr = weather.sunrise_time(timeformat='iso')
+    ss = datetime.fromtimestamp(weather.sunset_time()).strftime("%I:%M %p")
+    sr = datetime.fromtimestamp(weather.sunrise_time()).strftime("%I:%M %p")
     st.write("### Sunrise time in", place, "is", sr)
     st.write("### Sunset time in", place, "is", ss)
-
-
-def updates():
-    other_weather_updates()
-    cloud_and_wind()
-    sunrise_and_sunset()
+    creators = '<p style="font-family:Source Sans Pro; color:#09ab3b; font-size:20px; text-align:right;">Made by</p><p style="font-family:Source Sans Pro; color:#09ab3b; font-size: 15px; text-align:right;">Awais, Sunil, Priyanka, and Pranay</p>'
+    st.markdown(creators, unsafe_allow_html=True)
 
 
 if __name__ == '__main__':
 
-    if st.button("SUBMIT"):
+    if place != "":
         if g_type == 'Line Graph':
             draw_line_chart()
         else:
