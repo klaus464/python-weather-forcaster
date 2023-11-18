@@ -104,7 +104,7 @@ def draw_line_chart():
     fig = plot_temperature_lines(days, temp_min, temp_max)
     st.plotly_chart(fig)
     st.title("Minimum and Maximum Temperatures")
-    for i in range(0, 6):
+    for i in range(0, 5):
         st.write("### ", days[i].strftime("%d %b"), temp_min[i],
                  degree_sign, ' --- ', temp_max[i], degree_sign,)
 
