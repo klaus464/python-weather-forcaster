@@ -148,7 +148,7 @@ def updates():
     sr = datetime.fromtimestamp(weather.sunrise_time(), pytz.timezone("Asia/Kolkata")).strftime("%I:%M %p")
     st.write("### Sunrise time in", place, "is", sr)
     st.write("### Sunset time in", place, "is", ss)
-    creators = '<p style="font-family:Source Sans Pro; color:#09ab3b; font-size:20px; text-align:right;">Made by</p><p style="font-family:Source Sans Pro; color:#09ab3b; font-size: 15px; text-align:right;">Awais, Sunil, Priyanka, and Pranay</p>'
+    creators = '<p style="font-family:Source Sans Pro; color:#09ab3b; font-size:20px; text-align:right;">Made by</p><p style="font-family:Source Sans Pro; color:#09ab3b; font-size: 15px; text-align:right;">klaus464</p>'
     st.markdown(creators, unsafe_allow_html=True)
 
 
